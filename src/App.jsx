@@ -2,7 +2,6 @@ import { useState } from 'react'
 import FriendList from './components/FriendList';
 import FormAddFriend from './components/FormAddFriend';
 import FormSplitBill from './components/FormSplitBill';
-import { use } from 'react';
 
 const initialFriends = [
   {
@@ -31,20 +30,37 @@ function App() {
   //berfungsi untuk menyimpan data friend, mengunakan initialFriends sebagai useState agar sesuai dengan data pada object initialFriends
   //dan juga untuk memindahkan data pada object initialFriends ke variabel "friends"
   const [showAddFriend, setShowAddFriend] = useState(false)
+  const [selectedFriend, setSelectedFriend] = useState(null)
 
   function handleShowAddFriend(){
     setShowAddFriend((showAddFriend)=>!showAddFriend)
+    setSelectedFriend(null);
   }
 
   function handleAddFriend(friend){
     setFriends((friends) => [...friends, friend])
   }
 
+  function handleSelectedFriend(friend) { //value paramnya berasal dari friend yang dipilih pokoknya mah
+    setSelectedFriend((selected) => 
+      (selected?.id === friend.id ? null : friend)
+    ); 
+    //1. pengecekan apakah id tersedia?
+    //2. pengecekan apakah id yang dipilih sama dengan id friend yang dipilih?
+    //3. jika id yang dipilih sama dengan id friend yang dipilih maka akan diubah menjadi null/ditutup
+    //4. jika id yang dipilih berbeda dengan id friend yang dipilih maka akan diubah menjadi id terbaru
+    setShowAddFriend(false);
+  }
+
   return (
     <>
       <div className='app'>
         <div className='sidebar'>
-          <FriendList friends={friends} />
+          <FriendList 
+            friends={friends} 
+            onSelectFriend={handleSelectedFriend}
+            selectedFriend={selectedFriend} //menyimpan data friend yang dipilih
+          />
 
           {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
 
@@ -53,7 +69,7 @@ function App() {
           </button>
         </div>
 
-        <FormSplitBill />
+        {selectedFriend && <FormSplitBill selectedFriend={selectedFriend} />}
       </div>
     </>
   )

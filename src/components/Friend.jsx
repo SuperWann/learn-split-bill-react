@@ -1,6 +1,9 @@
-function Friend({friend}) {
+function Friend({friend, onSelectFriend, selectedFriend}) {
+
+    const isSelected = selectedFriend?.id === friend.id; // jika id yang dipilih sama dengan id friend yang dipilih
+
     return (
-        <li>
+        <li className={isSelected ? "selected" : ""}> {/* jika id yang dipilih sama dengan id friend yang dipilih */}
             <img src={friend.img} alt={friend.name}/>
             <h3>{friend.name}</h3>
             {friend.balance < 0 && (
@@ -14,7 +17,9 @@ function Friend({friend}) {
                 </p>
             )}
             {friend.balance === 0 && <p>Kamu dan {friend.name} tidak ada hutang</p>}
-            <button className="button">Pilih</button>
+            <button className="button" onClick={()=> onSelectFriend(friend)}> {/* ketika click maka akan mengirimkan data friend */}
+                {isSelected ? "Tutup" : "Pilih"} {/* jika isSlected ada value maka akan menampilkan "Tutup", jika tidak maka akan menampilkan "Pilih */}
+            </button>
         </li>
     )
 }
