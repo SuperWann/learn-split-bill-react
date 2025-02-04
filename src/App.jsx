@@ -27,22 +27,32 @@ const initialFriends = [
 
 function App() {
 
+  const [friends, setFriends] = useState(initialFriends) 
+  //berfungsi untuk menyimpan data friend, mengunakan initialFriends sebagai useState agar sesuai dengan data pada object initialFriends
+  //dan juga untuk memindahkan data pada object initialFriends ke variabel "friends"
   const [showAddFriend, setShowAddFriend] = useState(false)
 
   function handleShowAddFriend(){
     setShowAddFriend((showAddFriend)=>!showAddFriend)
   }
 
+  function handleAddFriend(friend){
+    setFriends((friends) => [...friends, friend])
+  }
+
   return (
     <>
       <div className='app'>
         <div className='sidebar'>
-          <FriendList friends={initialFriends} />
-          {showAddFriend && <FormAddFriend />}
+          <FriendList friends={friends} />
+
+          {showAddFriend && <FormAddFriend onAddFriend={handleAddFriend} />}
+
           <button className='button' onClick={handleShowAddFriend}>
             {showAddFriend ? 'Tutup' : 'Tambah Teman'}
           </button>
         </div>
+
         <FormSplitBill />
       </div>
     </>
